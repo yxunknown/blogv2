@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dev.hercat.com.blog.mapper.ArticleMapper">
+    <!-- articleMapper created with Intelij platform -->
+    <!--   date: 2018-12-21 11:33 -->
+    <!-- author: hercat -->
+    <!-- description here -->
+
+    <resultMap id="article" type="dev.hercat.com.blog.model.Article">
+        <id column="id" property="id"/>
+        <result column="title" property="title"/>
+        <result column="credate" property="createDate"/>
+        <result column="content" property="content"/>
+        <association property="type" javaType="dev.hercat.com.blog.model.ArticleType">
+            <id column="type_id" property="id"/>
+            <result column="type_type" property="type"/>
+        </association>
+    </resultMap>
+
+    <insert id="insertArticle" parameterType="dev.hercat.com.blog.model.Article">
+        insert into article
+        <trim prefix="(" prefixOverrides="," suffix=")">
+            <if test="article.id != ''">
+                id,
+            </if>
+            <if test="article.title != ''">
+                title,
+            </if>
+            <if test="article.createDate != ''">
+                credate,
+            </if>
+            <if test="article.type != -1">
+                type,
+            </if>
+            <if test="article.content != ''">
+                content
+            </if>
+        </trim>
+        values
+        <trim prefix="(" prefixOverrides="," suffix=")">
+            <if test="article.id != ''">
+                #{article.id},
+            </if>
+            <if test="article.title != ''">
+                #{article.title},
+            </if>
+            <if test="article.createDate != ''">
+                #{article.createDate},
+            </if>
+            <if test="article.type != -1">
+                #{article.type.id},
+            </if>
+            <if test="article.content != ''">
+                #{article.content}
+            </if>
+        </trim>
+    </insert>
+
+    <select id="selectArticleById" resultMap="article">
+        select
+        id,
+        title,
+        credate,
+        content,
+        type.id as type_id,
+        type.type as type_type
+        from article
+        left join article_type type on article.type = type.id
+        where article.id = #{id}
+    </select>
+
+    <select id="selectArticles" resultMap="article">
+        select
+        id,
+        title,
+        credate,
+        content,
+        type.id as type_id,
+        type.type as type_type
+        from article
+        left join article_type type on article.type = type.id
+        order by article.id desc
+        limit #{pagination.start}, #{pagination.limit}
+    </select>
+
+    <select id="selectArticlesBySelection" resultMap="article">
+        select
+        id,
+        title,
+        credate,
+        content,
+        type.id as type_id,
+        type.type as type_type
+        from article
+        left join article_type type on article.type = type.id
+        <where>
+            <trim prefixOverrides="and">
+                <if test="article.type.id != -1">
+                    and article.type = #{article.type.id}
+                </if>
+                <if test="article.createDate != ''">
+                    and article.credate >= #{article.createDate}
+                </if>
+            </trim>
+        </where>
+        order by article.id desc
+        limit #{pagination.start}, #{pagination.limit}
+    </select>
+
+    <select id="countBySelection" parameterType="dev.hercat.com.blog.model.Article" resultType="Long">
+        select count (id)
+        from article
+        <where>
+            <trim prefixOverrides="and">
+                <if test="article.type.id != -1">
+                    and aritcle.type = #{article.type.id}
+                </if>
+                <if test="article.createDate != ''">
+                    and aritcle.credate >= #{article.createDate}
+                </if>
+            </trim>
+        </where>
+    </select>
+
+    <select id="count" resultType="Long">
+        select count (id)
+        from article
+    </select>
+
+    <update id="updateArticle" parameterType="dev.hercat.com.blog.model.Article">
+        update article
+        <set>
+            <if test="article.title != ''">
+                title = #{article.title},
+            </if>
+            <if test="article.createDate != ''">
+                credate = #{article.createDate},
+            </if>
+            <if test="article.type.id != -1">
+                type = #{article.type.id},
+            </if>
+            <if test="article.content != ''">
+                content = #{article.content}
+            </if>
+        </set>
+        where aritcle.id = #{article.id}
+    </update>
+
+</mapper>

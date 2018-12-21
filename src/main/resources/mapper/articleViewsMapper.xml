@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dev.hercat.com.blog.mapper.ArticleViewsMapper">
+    <!-- articleViewsMapper created with Intelij platform -->
+    <!--   date: 2018-12-21 15:10 -->
+    <!-- author: hercat -->
+    <!-- description here -->
+    <resultMap id="views" type="dev.hercat.com.blog.model.ArticleViews">
+        <id column="id" property="id"/>
+        <result column="view_count" property="count"/>
+        <association property="article" javaType="dev.hercat.com.blog.model.Article">
+            <id column="article_id" property="id"/>
+            <result column="article_title" property="title"/>
+            <result column="article_create_date" property="createDate"/>
+        </association>
+    </resultMap>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="view.id"
+            parameterType="dev.hercat.com.blog.model.ArticleViews">
+        insert into article_view
+        <trim prefix="(" prefixOverrides="," suffix=")">
+            <if test="view.article.id != ''">
+                article_id,
+            </if>
+            <if test="view.count != 0">
+                view_count
+            </if>
+        </trim>
+        values
+        <trim prefix="(" prefixOverrides="," suffix=")">
+            <if test="view.article.id != ''">
+                #{view.article.id},
+            </if>
+            <if test="view.count != 0">
+                #{view.count}
+            </if>
+        </trim>
+    </insert>
+
+    <update id="update">
+        update article_view
+        <set>
+            <if test="view.count != 0">
+                view_count = #{view.count}
+            </if>
+        </set>
+        where article_view.article_id = #{view.article.id}
+    </update>
+
+    <select id="selectArticleViewsByArticleId" resultMap="view">
+        select
+        id,
+        view_count,
+        article.id as article_id,
+        article.title as article_title,
+        article.credate as article_create_date
+        FROM article_view, article
+        where article_view.article_id = article.id
+    </select>
+</mapper>

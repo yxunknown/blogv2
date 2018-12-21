@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dev.hercat.com.blog.mapper.ArticleTypeMapper">
+    <!-- articleTypeMapper created with Intelij platform -->
+    <!--   date: 2018-12-21 15:02 -->
+    <!-- author: hercat -->
+    <!-- description here -->
+    <resultMap id="type" type="dev.hercat.com.blog.model.ArticleType">
+        <id column="id" property="id"/>
+        <result column="type" property="type"/>
+    </resultMap>
+
+    <insert id="insertType" useGeneratedKeys="true" keyProperty="type.id"
+            parameterType="dev.hercat.com.blog.model.ArticleType">
+        insert into article_type
+        <trim prefix="(" prefixOverrides="," suffix=")">
+            <if test="type.type != ''">
+                'type'
+            </if>
+        </trim>
+        values
+        <trim prefix="(" prefixOverrides="," suffix=")">
+            <if test="type.type != ''">
+                #{type.type}
+            </if>
+        </trim>
+    </insert>
+
+    <select id="getTypes" resultMap="type">
+        select * from article_type
+    </select>
+</mapper>

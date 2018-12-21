@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dev.hercat.com.blog.mapper.UserMapper">
+    <!-- userMapper created with Intelij platform -->
+    <!--   date: 2018-12-21 11:02 -->
+    <!-- author: hercat -->
+    <!-- mybatis mapper file -->
+    <resultMap id="user" type="dev.hercat.com.blog.model.User">
+        <id column="email" property="email"/>
+        <result column="password" property="password"/>
+        <result column="nickname" property="nickname"/>
+        <result column="profile" property="profile"/>
+    </resultMap>
+
+    <insert id="insertUser" parameterType="dev.hercat.com.blog.model.User">
+        insert into user
+        <trim prefix="(" prefixOverrides="," suffix=")">
+            <if test="user.email != ''">
+                email,
+            </if>
+            <if test="user.password != ''">
+                password,
+            </if>
+            <if test="user.nickname != ''">
+                nickname,
+            </if>
+            <if test="user.profile != ''">
+                profile
+            </if>
+        </trim>
+        values
+        <trim prefix="(" prefixOverrides="," suffix=")">
+            <if test="user.email != ''">
+                #{user.emali},
+            </if>
+            <if test="user.password != ''">
+                #{user.password},
+            </if>
+            <if test="user.nickname != ''">
+                #{user.nickname},
+            </if>
+            <if test="user.profile != ''">
+                #{user.profile}
+            </if>
+        </trim>
+    </insert>
+
+    <select id="selectUserByEmail" resultMap="user">
+        select * from user
+        where user.email = #{email}
+    </select>
+
+</mapper>

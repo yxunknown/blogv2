@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dev.hercat.com.blog.mapper.CommentMapper">
+    <!-- commentMapper created with Intelij platform -->
+    <!--   date: 2018-12-21 13:14 -->
+    <!-- author: hercat -->
+    <!-- description here -->
+    <resultMap id="comment" type="dev.hercat.com.blog.model.ArticleComment">
+        <id column="id" property="id"/>
+        <result column="credate" property="createDate"/>
+        <result column="content" property="content"/>
+        <association property="from" javaType="dev.hercat.com.blog.model.User">
+            <id column="from_email" property="email"/>
+            <result column="from_nickname" property="nickname"/>
+            <result column="from_profile" property="profile"/>
+        </association>
+        <association property="to" javaType="dev.hercat.com.blog.model.User">
+            <id column="to_email" property="email"/>
+            <result column="to_nickname" property="nickname"/>
+            <result column="to_profile" property="profile"/>
+        </association>
+        <association property="article" javaType="dev.hercat.com.blog.model.Article">
+            <id column="article_id" property="id"/>
+            <result column="article_title" property="title"/>
+            <result column="article_create_date" property="createDate"/>
+        </association>
+    </resultMap>
+
+    <insert id="insertComment" useGeneratedKeys="true" keyProperty="comment.id"
+            parameterType="ArticleComment">
+        insert into
+        <trim prefix="(" prefixOverrides="," suffix=")">
+            <if test="comment.from.email != ''">
+                'from',
+            </if>
+            <if test="comment.to.email != ''">
+                'to',
+            </if>
+            <if test="comment.article.id != ''">
+                article_id,
+            </if>
+            <if test="comment.createDate != ''">
+                credate,
+            </if>
+            <if test="comment.content != ''">
+                content
+            </if>
+        </trim>
+        values
+        <trim prefix="(" prefixOverrides="," suffix=")">
+            <if test="comment.from.email != ''">
+                #{comment.from.email},
+            </if>
+            <if test="comment.to.email != ''">
+                #{comment.to.email},
+            </if>
+            <if test="comment.article.id != ''">
+                #{comment.article.id},
+            </if>
+            <if test="comment.createDate != ''">
+                #{comment.createDate},
+            </if>
+            <if test="comment.content != ''">
+                #{comment.content}
+            </if>
+        </trim>
+    </insert>
+
+    <select id="selectCommentsByArticle" resultMap="comment">
+        select
+        ac.id,
+        ac.credate,
+        ac.content,
+        from_user.email as from_email,
+        from_user.nickname as from_nickname,
+        from_user.profile as from_profile,
+        to_user.email as to_email,
+        to_user.nickname as to_nickname,
+        to_user.profile as to_profile,
+        art.id as article_id,
+        art.title as article_title,
+        art.credate as article_create_date
+        FROM article_comment ac, user from_user, user to_user, article arc
+        where ac.article_id = #{articleId}  and ac."from" = from_user.email and ac.send_to = to_user.email and ac.article_id = arc.id
+        order by ac.id desc
+        limit #{pagination.start}, #{pagination.limit}
+    </select>
+
+    <select id="countByArticle" resultType="Long">
+        select count(id)
+        from article_comment
+        where article_comment.article_id = #{articleId}
+    </select>
+
+    <delete id="deleteById">
+        delete from article_comment
+        where article_comment.id = #{id}
+    </delete>
+</mapper>
