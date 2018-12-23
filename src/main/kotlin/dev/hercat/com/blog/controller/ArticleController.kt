@@ -5,6 +5,7 @@ import dev.hercat.com.blog.model.Article
 import dev.hercat.com.blog.model.Message
 import dev.hercat.com.blog.model.Pagination
 import dev.hercat.com.blog.tool.generateArticleId
+import dev.hercat.com.blog.tool.generateDate
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
@@ -21,6 +22,7 @@ class ArticleController(
         when {
             validateArticle(article) -> {
                 article.id = generateArticleId()
+                article.createDate = generateDate()
                 if (articleMapper.insertArticle(article) == 1) {
                     msg.code = 200
                     msg.map("article", article)
@@ -71,7 +73,8 @@ class ArticleController(
     @RequestMapping(value = ["/p/s", "/p/s/"], method = [RequestMethod.GET])
     fun getArticlesBySelection(article: Article, pagination: Pagination): Message {
         val msg = Message()
-        if (validateArticle(article)) {
+        val validate = article.title.isNotBlank() || article.type.id != -1 || article.createDate.isNotBlank()
+        if (validate) {
             val articles = articleMapper.selectArticlesBySelection(article, pagination)
             val count = articleMapper.countBySelection(article)
             msg.code = 200
@@ -115,7 +118,6 @@ class ArticleController(
     private fun validateArticle(article: Article): Boolean {
         return when {
             article.title.isBlank() -> false
-            article.createDate.isBlank() -> false
             article.type.id == -1 -> false
             article.content.isBlank() -> false
             else -> true

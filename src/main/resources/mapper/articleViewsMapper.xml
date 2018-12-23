@@ -49,8 +49,8 @@
 
     <select id="selectArticleViewsByArticleId" resultMap="views">
         select
-        id,
-        view_count,
+        article_view.id,
+        article_view.view_count,
         article.id as article_id,
         article.title as article_title,
         article.credate as article_create_date

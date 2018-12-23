@@ -15,7 +15,7 @@
         insert into article_type
         <trim prefix="(" prefixOverrides="," suffix=")">
             <if test="type.type != ''">
-                'type'
+                type
             </if>
         </trim>
         values

@@ -29,7 +29,7 @@
             <if test="article.createDate != ''">
                 credate,
             </if>
-            <if test="article.type != -1">
+            <if test="article.type.id != -1">
                 type,
             </if>
             <if test="article.content != ''">
@@ -47,7 +47,7 @@
             <if test="article.createDate != ''">
                 #{article.createDate},
             </if>
-            <if test="article.type != -1">
+            <if test="article.type.id != -1">
                 #{article.type.id},
             </if>
             <if test="article.content != ''">
@@ -58,34 +58,34 @@
 
     <select id="selectArticleById" resultMap="article">
         select
-        id,
-        title,
-        credate,
-        content,
-        type.id as type_id,
-        type.type as type_type
+            article.id,
+            title,
+            credate,
+            content,
+            type.id   as type_id,
+            type.type as type_type
         from article
-        left join article_type type on article.type = type.id
+            left join article_type type on article.type = type.id
         where article.id = #{id}
     </select>
 
     <select id="selectArticles" resultMap="article">
         select
-        id,
-        title,
-        credate,
-        content,
-        type.id as type_id,
-        type.type as type_type
+            article.id,
+            title,
+            credate,
+            content,
+            type.id   as type_id,
+            type.type as type_type
         from article
-        left join article_type type on article.type = type.id
+            left join article_type type on article.type = type.id
         order by article.id desc
         limit #{pagination.start}, #{pagination.limit}
     </select>
 
     <select id="selectArticlesBySelection" resultMap="article">
         select
-        id,
+        article.id,
         title,
         credate,
         content,
@@ -96,7 +96,7 @@
         <where>
             <trim prefixOverrides="and">
                 <if test="article.title != ''">
-                    and article.title like '%#{article.title}%'
+                    and article.title like '%'#{article.title}'%'
                 </if>
                 <if test="article.type.id != -1">
                     and article.type = #{article.type.id}
@@ -111,25 +111,25 @@
     </select>
 
     <select id="countBySelection" parameterType="dev.hercat.com.blog.model.Article" resultType="Long">
-        select count (id)
+        select count(id)
         from article
         <where>
             <trim prefixOverrides="and">
                 <if test="article.title != ''">
-                    and article.title like '%#{article.title}%'
+                    and title like '%'#{article.title}'%'
                 </if>
                 <if test="article.type.id != -1">
-                    and aritcle.type = #{article.type.id}
+                    and type = #{article.type.id}
                 </if>
                 <if test="article.createDate != ''">
-                    and aritcle.credate >= #{article.createDate}
+                    and credate >= #{article.createDate}
                 </if>
             </trim>
         </where>
     </select>
 
     <select id="count" resultType="Long">
-        select count (id)
+        select count(id)
         from article
     </select>
 
