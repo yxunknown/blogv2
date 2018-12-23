@@ -4,6 +4,7 @@ import java.math.BigInteger
 import java.nio.charset.Charset
 import java.security.MessageDigest
 import java.sql.Timestamp
+import java.text.SimpleDateFormat
 import java.time.Instant
 import java.util.*
 
@@ -35,4 +36,11 @@ fun generateArticleId(): String {
         sb.append("0")
     }
     return sb.toString()
+}
+
+@Synchronized
+fun generateDate(): String {
+    val date = Date()
+    val dateFormatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA)
+    return dateFormatter.format(date)
 }

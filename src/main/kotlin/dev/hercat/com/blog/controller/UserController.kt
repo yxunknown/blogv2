@@ -4,6 +4,7 @@ import dev.hercat.com.blog.mapper.UserMapper
 import dev.hercat.com.blog.model.Message
 import dev.hercat.com.blog.model.User
 import dev.hercat.com.blog.tool.sha
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RestController
@@ -11,19 +12,19 @@ import java.util.regex.Pattern
 
 @RestController
 class UserController(
-        private val userMapper: UserMapper) {
+        @Autowired val userMapper: UserMapper) {
 
     @RequestMapping(value = ["/blog/register", "/blog/register/"], method = [RequestMethod.POST])
     fun register(user: User): Message {
         val msg = Message()
         if (validateUser(user, msg)) {
             // encrypt passcode
-            user.passwod = sha(user.passwod)
+            user.password = sha(user.password)
             // add into db
             if (userMapper.insertUser(user) == 1) {
                 msg.code = 200
                 msg.map("user", user.apply {
-                    passwod = "*********"
+                    password = "*********"
                 })
             }
         }
@@ -33,7 +34,7 @@ class UserController(
     @RequestMapping(value = ["/blog/login", "/blog/login/"], method = [RequestMethod.POST])
     fun login(user: User): Message {
         val msg = Message()
-        val validate = user.email.isNotBlank() && user.passwod.isNotBlank()
+        val validate = user.email.isNotBlank() && user.password.isNotBlank()
         if (validate) {
             val storedUser = userMapper.selectUserByEmail(user.email)
             when {
@@ -41,14 +42,14 @@ class UserController(
                     msg.code = 400
                     msg.info = "用户不存在"
                 }
-                sha(user.passwod) != storedUser.passwod -> {
+                sha(user.password) != storedUser.password -> {
                     msg.code = 400
                     msg.info = "密码错误"
                 }
                 else -> {
                     msg.code = 200
                     msg.map("user", storedUser.apply {
-                        passwod = "********"
+                        password = "********"
                     })
                 }
             }
@@ -72,7 +73,7 @@ class UserController(
                 msg.info = "用户昵称为空"
                 false
             }
-            user.passwod.isBlank() -> {
+            user.password.isBlank() -> {
                 msg.code = 400
                 msg.info = "密码为空"
                 false

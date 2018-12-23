@@ -95,6 +95,9 @@
         left join article_type type on article.type = type.id
         <where>
             <trim prefixOverrides="and">
+                <if test="article.title != ''">
+                    and article.title like '%#{article.title}%'
+                </if>
                 <if test="article.type.id != -1">
                     and article.type = #{article.type.id}
                 </if>
@@ -112,6 +115,9 @@
         from article
         <where>
             <trim prefixOverrides="and">
+                <if test="article.title != ''">
+                    and article.title like '%#{article.title}%'
+                </if>
                 <if test="article.type.id != -1">
                     and aritcle.type = #{article.type.id}
                 </if>

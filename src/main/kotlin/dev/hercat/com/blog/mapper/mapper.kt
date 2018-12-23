@@ -61,5 +61,5 @@ interface ArticleViewsMapper {
 
     fun update(@Param("view") view: ArticleViews): Int
 
-    fun selectArticleViewsByArticleId(@Param("articleId") articleId: String): ArticleViews
+    fun selectArticleViewsByArticleId(@Param("articleId") articleId: String): ArticleViews?
 }

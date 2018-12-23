@@ -16,7 +16,7 @@ class Message {
 
 data class User(
         var email: String = "",
-        var passwod: String = "",
+        var password: String = "",
         var nickname: String = "",
         var profile: String = "")
 

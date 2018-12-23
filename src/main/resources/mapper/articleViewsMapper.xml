@@ -47,7 +47,7 @@
         where article_view.article_id = #{view.article.id}
     </update>
 
-    <select id="selectArticleViewsByArticleId" resultMap="view">
+    <select id="selectArticleViewsByArticleId" resultMap="views">
         select
         id,
         view_count,
