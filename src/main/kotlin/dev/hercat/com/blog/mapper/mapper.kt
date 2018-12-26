@@ -63,3 +63,11 @@ interface ArticleViewsMapper {
 
     fun selectArticleViewsByArticleId(@Param("articleId") articleId: String): ArticleViews?
 }
+
+@Component
+@Mapper
+interface EvilsMapper {
+    fun insert(@Param("evils") evils: Evils): Int
+
+    fun getEvils(@Param("pagination") pagination: Pagination = Pagination()): List<Evils>
+}

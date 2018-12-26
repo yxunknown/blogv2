@@ -8,6 +8,7 @@
     <resultMap id="type" type="dev.hercat.com.blog.model.ArticleType">
         <id column="id" property="id"/>
         <result column="type" property="type"/>
+        <result column="cover" property="cover"/>
     </resultMap>
 
     <insert id="insertType" useGeneratedKeys="true" keyProperty="type.id"
@@ -15,13 +16,19 @@
         insert into article_type
         <trim prefix="(" prefixOverrides="," suffix=")">
             <if test="type.type != ''">
-                type
+                type,
+            </if>
+            <if test="type.cover != ''">
+                cover
             </if>
         </trim>
         values
         <trim prefix="(" prefixOverrides="," suffix=")">
             <if test="type.type != ''">
-                #{type.type}
+                #{type.type},
+            </if>
+            <if test="type.cover != ''">
+                #{type.cover}
             </if>
         </trim>
     </insert>

@@ -29,7 +29,8 @@ data class Article(
 
 data class ArticleType(
         var id: Int = -1,
-        var type: String = "")
+        var type: String = "",
+        var corver: String = "")
 
 data class ArticleViews(
         var id: Int = 0,
@@ -44,3 +45,7 @@ data class ArticleComment(
         var createDate: String = "",
         var content: String = "")
 
+data class Evils(
+        var id: Int = -1,
+        var createDate: String = "",
+        var content: String = "")
