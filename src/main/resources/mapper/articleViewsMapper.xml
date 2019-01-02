@@ -57,4 +57,8 @@
         FROM article_view, article
         where article_view.article_id = article.id
     </select>
+
+    <select id="totalView" resultType="Long">
+        select sum(view_count) from article_view
+    </select>
 </mapper>

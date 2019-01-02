@@ -43,4 +43,13 @@ class EvilsController(
         msg.map("pagination", pagination)
         return msg
     }
+
+    @RequestMapping(value = ["/evils/count", "/evils/count/"], method = [RequestMethod.GET])
+    fun count(): Message {
+        val msg = Message()
+        val count = evilsMapper.count()
+        msg.code = 200
+        msg.map("count", count)
+        return msg
+    }
 }

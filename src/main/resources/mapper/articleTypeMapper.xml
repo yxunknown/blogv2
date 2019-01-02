@@ -36,4 +36,8 @@
     <select id="getTypes" resultMap="type">
         select * from article_type
     </select>
+
+    <select id="count" resultType="Long">
+        select count(*) from article_type
+    </select>
 </mapper>

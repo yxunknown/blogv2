@@ -59,13 +59,18 @@ class ArticleController(
     }
 
     @RequestMapping(value = ["/p", "/p/"], method = [RequestMethod.GET])
-    fun getArticles(pagination: Pagination): Message {
-        val articles = articleMapper.selectArticles(pagination)
-        val count = articleMapper.count()
+    fun getArticles(pagination: Pagination, selection: Article): Message {
+        val hasSelection = validateArticle(selection)
         val msg = Message()
+        val articles = if (hasSelection) {
+            msg.map("selection", selection)
+            articleMapper.selectArticlesBySelection(selection, pagination) to articleMapper.countBySelection(selection)
+        } else {
+            articleMapper.selectArticles(pagination) to articleMapper.count()
+        }
         msg.code = 200
-        msg.map("articles", articles)
-        msg.map("count", count)
+        msg.map("articles", articles.first)
+        msg.map("count", articles.second)
         msg.map("pagination", pagination)
         return msg
     }
@@ -112,6 +117,21 @@ class ArticleController(
             msg.code = 400
             msg.info = "文章参数不完整"
         }
+        return msg
+    }
+
+    @RequestMapping(value = ["/p/count", "/p/count/"], method = [RequestMethod.GET])
+    fun getCount(selection: Article): Message {
+        val msg = Message()
+        val hasSelection = validateArticle(selection)
+        val count = if (hasSelection) {
+            msg.map("selection", selection)
+            articleMapper.countBySelection(selection)
+        } else {
+            articleMapper.count()
+        }
+        msg.code = 200
+        msg.map("count", count)
         return msg
     }
 

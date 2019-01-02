@@ -39,4 +39,7 @@
         limit #{pagination.start}, #{pagination.limit}
     </select>
 
+    <select id="count" resultType="Long">
+        SELECT COUNT(*) from evilss
+    </select>
 </mapper>

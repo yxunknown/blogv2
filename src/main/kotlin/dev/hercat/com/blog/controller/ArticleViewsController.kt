@@ -69,4 +69,12 @@ class ArticleViewsController(
         }
         return msg
     }
+
+    @RequestMapping(value = ["/p/views", "/p/views/"], method = [RequestMethod.GET])
+    fun totalView(): Message {
+        val msg = Message()
+        val views = articleViewsMapper.totalView()
+        msg.map("views", views)
+        return msg
+    }
 }

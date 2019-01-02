@@ -4,6 +4,7 @@ import dev.hercat.com.blog.mapper.ArticleTypeMapper
 import dev.hercat.com.blog.model.ArticleType
 import dev.hercat.com.blog.model.Message
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.support.beans
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RestController
@@ -36,6 +37,15 @@ class ArticleTypeController(
         val types = typeMapper.getTypes()
         msg.code = 200
         msg.map("types", types)
+        return msg
+    }
+
+    @RequestMapping(value = ["/p/type/count", "/p/type/count/"], method = [RequestMethod.GET])
+    fun count(): Message {
+        val msg = Message()
+        val count = typeMapper.count()
+        msg.code = 200
+        msg.map("count", count)
         return msg
     }
 }

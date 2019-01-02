@@ -52,6 +52,8 @@ interface ArticleTypeMapper {
     fun insertType(@Param("type") type: ArticleType): Int
 
     fun getTypes(): List<ArticleType>
+
+    fun count(): Long
 }
 
 @Component
@@ -62,6 +64,8 @@ interface ArticleViewsMapper {
     fun update(@Param("view") view: ArticleViews): Int
 
     fun selectArticleViewsByArticleId(@Param("articleId") articleId: String): ArticleViews?
+
+    fun totalView(): Long
 }
 
 @Component
@@ -70,4 +74,6 @@ interface EvilsMapper {
     fun insert(@Param("evils") evils: Evils): Int
 
     fun getEvils(@Param("pagination") pagination: Pagination = Pagination()): List<Evils>
+
+    fun count(): Long
 }
